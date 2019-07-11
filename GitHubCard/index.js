@@ -37,8 +37,6 @@ const entry = document.querySelector('.cards')
 
 const followersArray = [
   "AntonioUniverse",
-  "antilou86",
-  "llamousse",
   "tetondan",
   "dustinmyers",
   "justsml",
@@ -46,6 +44,38 @@ const followersArray = [
   "bigknell",
 ];
 
+// Strecth goal - make a card programmatically (Create a function that requests the followers data from the API)
+// const followerList = axios.get("https://api.github.com/users/areumjo/followers")
+//   .then(data => {
+//       console.log('checking if it works:', data.data)
+//       const tempList = data.data
+//       tempList.forEach( ele => entry.appendChild(createCard(ele)))
+//   })
+//   .catch(error => {
+//     console.log('API is currently down, try again later', error)
+//   })
+const followerList = axios.get("https://api.github.com/users/areumjo/followers")
+  .then(data => {
+      console.log('checking if it works:', data.data)
+      const tempList = data.data
+      const newArray = []
+      tempList.forEach( ele => {
+        newArray.push(ele["login"])
+      })
+      newArray.forEach( ele => axios.get(`https://api.github.com/users/${ele}`)
+        .then(githubData => {
+          console.log('checking if it works:', githubData)
+          const compoData = githubData.data
+          const cardElement = createCard(compoData)
+          entry.appendChild(cardElement)
+        })
+        .catch(error => {
+          console.log('API is currently down, try again later', error)
+      }))
+        })
+  .catch(error => {
+    console.log('API is currently down, try again later', error)
+  })
 
 followersArray.forEach( ele => axios.get(`https://api.github.com/users/${ele}`)
   .then(githubData => {
@@ -57,7 +87,6 @@ followersArray.forEach( ele => axios.get(`https://api.github.com/users/${ele}`)
   .catch(error => {
     console.log('API is currently down, try again later', error)
 }))
-
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
