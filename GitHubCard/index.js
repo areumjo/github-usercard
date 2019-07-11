@@ -5,6 +5,9 @@
 axios.get('https://api.github.com/users/areumjo')
   .then(githubData => {
     console.log('checking if it works:', githubData)
+    const compoData = githubData.data
+    const cardElement = createCard(compoData)
+    entry.appendChild(cardElement)
   })
   .catch(error => {
     console.log('API is currently down, try again later', error)
@@ -12,13 +15,15 @@ axios.get('https://api.github.com/users/areumjo')
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
-
+    // inpsected the object => data.data
    Skip to Step 3.
 */
 
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
+
+const entry = document.querySelector('.cards')
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -51,6 +56,50 @@ const followersArray = [];
 </div>
 
 */
+
+function createCard(dataObj) {
+  const card = document.createElement('div')
+  const imgUser = document.createElement('img')
+  const cardInfo = document.createElement('div')
+
+  const user = document.createElement('h3')
+  const userName = document.createElement('p')
+  const location = document.createElement('p')
+
+  const profile = document.createElement('p')
+  const addressPage = document.createElement('a')
+  const followers = document.createElement('p')
+  const following = document.createElement('p')
+  const bio = document.createElement('p')
+
+  card.classList.add('card')
+  cardInfo.classList.add('card-info')
+  user.classList.add('name')
+  userName.classList.add('username')
+
+  imgUser.src = dataObj.avatar_url
+  user.textContent = dataObj.name
+  userName.textContent = dataObj.login
+  location.textContent = `Location: ${dataObj.location}`
+  addressPage.textContent = `Profile: ${dataObj.html_url}`
+  addressPage.href = dataObj.html_url
+  followers.textContent = `Followers: ${dataObj.followers}`
+  following.textContent = `Following: ${dataObj.following}`
+  bio.textContent = `Bio: ${dataObj.bio}`
+
+  card.appendChild(imgUser)
+  card.appendChild(cardInfo)
+  cardInfo.appendChild(user)
+  cardInfo.appendChild(userName)
+  cardInfo.appendChild(location)
+  cardInfo.appendChild(profile)
+  profile.appendChild(addressPage)
+  cardInfo.appendChild(followers)
+  cardInfo.appendChild(following)
+  cardInfo.appendChild(bio)
+
+  return card
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
